@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Michael HQ</title>
+<style>
+:root{
+  --bg:#F1F0EC; --card:#FFFFFF; --ink:#131518; --ink2:#2A2D33; --muted:#6C7078; --faint:#A3A6AC;
+  --line:#E2E0DA; --soft:#F7F6F3;
+  --hot:#FF4A14; --hotSoft:#FFE9E1;
+  --cob:#2747F5; --cobSoft:#E6EAFF;
+  --ok:#0B9B6A; --okSoft:#DDF5EB;
+  --amber:#C98500; --amberSoft:#FFF3D6;
+  --r:18px;
+  --display:"Avenir Next Condensed","Avenir Next","Helvetica Neue",Arial,sans-serif;
+  --body:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font-family:var(--body);-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;background:none}
+.app{max-width:560px;margin:0 auto;padding:22px 16px 90px}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:18px}
+.eyebrow{font-family:var(--display);font-weight:600;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:700;font-size:38px;line-height:1;letter-spacing:-.01em;margin-top:6px}
+h2{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:26px 2px 10px}
+.iconbtn{width:42px;height:42px;border-radius:50%;background:var(--card);border:1px solid var(--line);display:grid;place-items:center}
+.iconbtn svg{width:20px;height:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px;margin-bottom:12px;animation:rise .35s ease both}
+.card:nth-child(2){animation-delay:.04s}.card:nth-child(3){animation-delay:.08s}.card:nth-child(4){animation-delay:.12s}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.cardhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.tag{font-family:var(--display);font-weight:700;font-size:11px;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:99px}
+.tag.hot{background:var(--hotSoft);color:var(--hot)}.tag.cob{background:var(--cobSoft);color:var(--cob)}.tag.ink{background:var(--ink);color:#fff}.tag.ok{background:var(--okSoft);color:var(--ok)}
+.big{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1;letter-spacing:-.01em}
+.sub{color:var(--muted);font-size:14px;line-height:1.45;margin-top:4px}
+.num{font-family:var(--display);font-weight:700;font-variant-numeric:tabular-nums}
+.row{display:flex;gap:8px;align-items:center}
+.btn{height:46px;padding:0 18px;border-radius:14px;font-weight:600;font-size:15px;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--ink);color:#fff}
+.btn.hot{background:var(--hot);color:#fff}
+.btn.cob{background:var(--cob);color:#fff}
+.btn.ghost{background:var(--soft);border:1px solid var(--line)}
+.btn.small{height:36px;padding:0 12px;font-size:13px;border-radius:10px}
+.btn.full{width:100%}
+.grow{flex:1}
+.bar{height:10px;background:var(--soft);border:1px solid var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--hot);border-radius:99px;transition:width .5s ease}
+/* nav */
+nav.tabs{position:fixed;left:50%;transform:translateX(-50%);bottom:52px;z-index:20;display:flex;gap:4px;padding:6px;background:rgba(19,21,24,.94);backdrop-filter:blur(10px);border-radius:22px;box-shadow:0 10px 30px rgba(0,0,0,.18)}
+nav.tabs button{color:#9BA0A8;padding:9px 14px;border-radius:16px;font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.06em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:3px;min-width:70px}
+nav.tabs button svg{width:20px;height:20px}
+nav.tabs button.on{background:#fff;color:var(--ink)}
+/* week dots */
+.week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.day{text-align:center}
+.day .d{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.1em;color:var(--faint);margin-bottom:6px}
+.day .dot{height:38px;border-radius:12px;background:var(--soft);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;color:var(--faint)}
+.day .dot.on{background:var(--cob);border-color:var(--cob);color:#fff}
+.day .dot.part{background:var(--cobSoft);border-color:#C9D2FF;color:var(--cob)}
+.day .dot.today{outline:2px solid var(--ink);outline-offset:2px}
+.day .dot.hw{background:var(--ink);border-color:var(--ink);color:#fff}
+.day .dot.hwnone{background:var(--okSoft);border-color:#BDE9D6;color:var(--ok)}
+/* list items */
+.item{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line)}
+.item:first-child{border-top:0;padding-top:2px}
+.check{flex:none;width:26px;height:26px;border-radius:8px;border:2px solid var(--faint);display:grid;place-items:center;margin-top:1px;background:#fff}
+.check.on{background:var(--ink);border-color:var(--ink)}
+.check svg{width:14px;height:14px;color:#fff}
+.itemtitle{font-weight:600;font-size:15px;line-height:1.35}
+.itemmeta{font-size:13px;color:var(--muted);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:3px 8px;border-radius:99px;background:var(--soft);border:1px solid var(--line)}
+.pill.warn{background:var(--amberSoft);border-color:#F3DD9E;color:#8A5B00}
+.pill.ok{background:var(--okSoft);border-color:#BDE9D6;color:var(--ok)}
+.pill.late{background:var(--hotSoft);border-color:#FFC9B6;color:var(--hot)}
+.pill button{font-weight:700}
+.x{color:var(--faint);font-size:20px;line-height:1;padding:0 4px}
+/* forms */
+label.f{display:block;font-size:12px;font-weight:600;color:var(--muted);margin:12px 0 6px;text-transform:uppercase;letter-spacing:.08em}
+.in{width:100%;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--soft);padding:0 14px;font-size:15px;outline:none}
+.in:focus{border-color:var(--ink);background:#fff}
+textarea.in{height:80px;padding:12px 14px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{height:36px;padding:0 13px;border-radius:99px;border:1px solid var(--line);background:var(--soft);font-size:14px;font-weight:600}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.cobon{background:var(--cob);color:#fff;border-color:var(--cob)}
+.toggle{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:12px;background:var(--soft);border:1px solid var(--line);margin-top:12px;font-weight:600;font-size:15px}
+.sw{width:46px;height:28px;border-radius:99px;background:#D3D1CB;position:relative;transition:.2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sw.on{background:var(--ink)}.sw.on::after{left:21px}
+/* rank */
+.ringwrap{display:flex;gap:18px;align-items:center}
+.ring{flex:none;width:96px;height:96px;position:relative}
+.ring svg{width:96px;height:96px;transform:rotate(-90deg)}
+.ring .lbl{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .lbl b{font-family:var(--display);font-size:26px;line-height:1}
+.ring .lbl small{display:block;font-size:11px;color:var(--muted);font-weight:600;margin-top:2px}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.sq{width:10px;height:10px;border-radius:3px;display:inline-block}
+.cat{margin-bottom:12px}
+.cathead{display:flex;justify-content:space-between;align-items:baseline;margin:22px 2px 8px}
+.cathead b{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
+.cathead span{font-family:var(--display);font-weight:600;font-size:13px;color:var(--muted)}
+.req{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-bottom:6px;overflow:hidden}
+.reqtop{display:flex;align-items:center;gap:12px;padding:12px 14px;width:100%;text-align:left}
+.status{flex:none;width:30px;height:30px;border-radius:50%;border:2px solid #CFCDC6;display:grid;place-items:center;background:#fff}
+.status.s1{border-color:var(--amber);background:var(--amberSoft)}
+.status.s1::after{content:"";width:10px;height:10px;border-radius:50%;background:var(--amber)}
+.status.s2{border-color:var(--ok);background:var(--ok)}
+.status svg{width:15px;height:15px;color:#fff}
+.code{font-family:var(--mono);font-size:12px;color:var(--muted);width:26px;flex:none}
+.reqname{font-weight:600;font-size:15px;line-height:1.3;flex:1}
+.req.s2 .reqname{color:var(--muted)}
+.hintdot{width:8px;height:8px;border-radius:50%;background:var(--hot);flex:none}
+.reqbody{padding:0 14px 14px 56px;font-size:14px;line-height:1.5;color:var(--ink2)}
+.hint{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--hotSoft);color:#8E2A06;font-size:13.5px;line-height:1.45}
+.hint.cob{background:var(--cobSoft);color:#1B2F9E}
+.seg{display:flex;background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:3px;margin-top:12px}
+.seg button{flex:1;height:34px;border-radius:9px;font-size:13px;font-weight:600;color:var(--muted)}
+.seg button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.filters{display:flex;gap:6px;margin-top:14px}
+/* fitness */
+.bars{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;height:150px;align-items:end;position:relative;padding-top:10px}
+.bars .col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+.bars .b{width:100%;max-width:38px;border-radius:8px 8px 4px 4px;background:var(--cobSoft);transition:height .5s ease;min-height:4px}
+.bars .b.hit{background:var(--cob)}
+.bars .v{font-family:var(--display);font-weight:700;font-size:12px;color:var(--muted);margin-bottom:4px}
+.bars .d{font-family:var(--display);font-weight:600;font-size:11px;letter-spacing:.1em;color:var(--faint);margin-top:6px}
+.goal-line{position:absolute;left:0;right:0;border-top:2px dashed var(--ink);opacity:.25;pointer-events:none}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:34px;height:34px;border-radius:10px;background:var(--soft);border:1px solid var(--line);font-size:18px;font-weight:700}
+.grid4{display:grid;grid-template-columns:auto repeat(7,minmax(0,1fr)) auto;gap:5px;align-items:center;margin-top:12px}
+.grid4 .w{font-family:var(--display);font-weight:700;font-size:12px;color:var(--muted);letter-spacing:.08em;padding-right:4px}
+.grid4 .c{height:26px;border-radius:7px;background:var(--soft);border:1px solid var(--line)}
+.grid4 .c.on{background:var(--cob);border-color:var(--cob)}
+.grid4 .c.future{background:transparent;border-style:dashed}
+.grid4 .res{font-family:var(--display);font-weight:700;font-size:13px;padding-left:6px;min-width:34px;text-align:right}
+.empty{color:var(--muted);font-size:14px;padding:6px 0}
+/* sheet */
+.scrim{position:fixed;inset:0;background:rgba(19,21,24,.4);z-index:40;display:none}
+.scrim.open{display:block}
+.sheet{position:fixed;left:50%;bottom:0;transform:translate(-50%,100%);width:min(560px,100%);max-height:88vh;overflow:auto;background:var(--bg);border-radius:24px 24px 0 0;z-index:50;padding:22px 18px 70px;transition:transform .3s ease}
+.sheet.open{transform:translate(-50%,0)}
+.sheet h3{font-family:var(--display);font-weight:700;font-size:26px;margin-bottom:4px}
+.toast{position:fixed;left:50%;top:18px;transform:translate(-50%,-80px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:14px;font-weight:600;font-size:14px;z-index:60;transition:transform .3s ease;max-width:90%;text-align:center}
+.toast.show{transform:translate(-50%,0)}
+.note{font-size:13px;color:var(--muted);line-height:1.5;margin-top:10px}
+.hub{display:flex;flex-direction:column;align-items:flex-start;gap:8px;width:100%;text-align:left;position:relative;padding:22px 20px;transition:transform .12s,border-color .12s}
+.hub:active{transform:scale(.98)}.hub:hover{border-color:var(--ink)}
+.hubtitle{font-family:var(--display);font-weight:700;font-size:30px;line-height:1;letter-spacing:-.01em}
+.hubline{font-size:15px;color:var(--muted);font-weight:500;padding-right:30px}
+.hub .bar{width:100%}
+.arrow{position:absolute;right:20px;top:22px;font-size:24px;font-weight:700;color:var(--faint)}
+.backbtn{font-family:var(--display);font-weight:700;font-size:14px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:7px 13px;margin-bottom:12px}
+.money{display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:12px;background:var(--amberSoft);border:1px solid #F3DD9E;font-size:14px;font-weight:600;color:#6B4700}
+.money .num{font-size:24px;color:#8A5B00}
+.money.won{background:var(--okSoft);border-color:#BDE9D6;color:var(--ok)}.money.won .num{color:var(--ok)}
+.earn{display:flex;gap:16px;margin-bottom:6px}
+.earn div{flex:1;padding:12px 14px;border-radius:12px;background:var(--soft);border:1px solid var(--line)}
+.earn .num{font-size:30px;line-height:1}
+@media (min-width:700px){ h1{font-size:44px} }
+@media print{
+  nav.tabs,.iconbtn,.btn,.scrim,.sheet,.toast{display:none!important}
+  .app{padding-bottom:20px}
+  .card,.req{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div>
+      <button class="backbtn" id="back" data-go="home">← Home</button>
+      <div class="eyebrow" id="dateline"></div>
+      <h1 id="title"></h1>
+    </div>
+    <button class="iconbtn" data-a="openSettings" aria-label="Settings">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2"/><circle cx="10" cy="17" r="2"/></svg>
+    </button>
+  </header>
+  <main id="view"></main>
+</div>
+
+
+<div class="scrim" id="scrim" data-a="closeSheet"></div>
+<div class="sheet" id="sheet"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------- First Class requirements (Scouts BSA Requirements, Dec 2025 edition) ---------- */
+const REQS = [
+ {cat:'Camping & Outdoor Ethics', items:[
+  ['1a','10 troop/patrol activities','Since joining Scouts BSA, participate in 10 separate troop/patrol activities, at least six of which must be held outdoors. Of the outdoor activities, at least three must include overnight camping. These activities do not include troop or patrol meetings. On campouts, spend the night in a tent that you pitch or other structure that you help erect, such as a lean-to, snow cave, or tepee.','You\'ve probably already done this. Count every trip and campout since March 2025 (Goose Pond, the fossil weekend, etc.) and show a leader.'],
+  ['1b','Camping impacts + Outdoor Code','Explain the potential impacts of camping, both on the environment and on other outdoor users. Explain why the Outdoor Code and Leave No Trace principles are important for protecting the outdoors.','You already learned Leave No Trace for Second Class 1b. This one builds on it.']
+ ]},
+ {cat:'Cooking', items:[
+  ['2a','Plan a 3‑meal campout menu','Help plan a menu for one of the above campouts that includes at least one breakfast, one lunch, and one dinner, and that requires cooking at least two of the meals. Tell how the menu includes the foods from MyPlate or the current USDA nutritional model and how it meets nutritional needs for the planned activity or campout.','2a through 2e all go together on one campout. Pick the trip early.'],
+  ['2b','Budget + shopping list for 3+','Using the menu planned in First Class requirement 2a, make a list showing a budget and the food amounts needed to feed three or more youth. Secure the ingredients.'],
+  ['2c','Pans, utensils & gear list','Show which pans, utensils, and other gear will be needed to cook and serve these meals.'],
+  ['2d','Safe food storage + trash','Demonstrate the procedures to follow in the safe handling and storage of fresh meats, dairy products, eggs, vegetables, and other perishable food products. Show how to properly dispose of camp garbage, cans, plastic containers, waste water, and other rubbish.'],
+  ['2e','Be the cook on a campout','On one campout, serve as cook. Supervise your assistant(s) in using a stove or building a cooking fire. Prepare the breakfast, lunch, and dinner planned in First Class requirement 2a. Supervise the cleanup.']
+ ]},
+ {cat:'Tools', items:[
+  ['3a','When to use lashings','Discuss when you should and should not use lashings.'],
+  ['3b','Timber hitch + clove hitch','Demonstrate tying the timber hitch and clove hitch.','Practice at home with any rope and a table leg or broom handle.'],
+  ['3c','Square, shear & diagonal lashings','Demonstrate tying the square, shear, and diagonal lashings by joining two or more poles or staves together.','Practice at home with garden stakes or broom handles and rope, then show a leader at a meeting.'],
+  ['3d','Build a camp gadget','Use lashings to make a useful camp gadget or structure.','Once 3c is done, build something on the next campout: a tripod, a dish rack, or a flagpole.']
+ ]},
+ {cat:'Navigation', items:[
+  ['4a','1‑mile orienteering course','Using a map and compass, complete an orienteering course that covers at least one mile and requires measuring the height and/or width of designated items (tree, tower, canyon, ditch, etc.).'],
+  ['4b','Navigate with GPS','Demonstrate how to use a handheld GPS unit, GPS app on a smartphone, or other electronic navigation system. Use GPS to find your current location, a destination of your choice, and the route you will take to get there. Follow that route to arrive at your destination.']
+ ]},
+ {cat:'Nature', items:[
+  ['5a','Identify 10 native plants','Identify or show evidence of at least 10 kinds of native plants found in your local area or campsite location. You may show evidence by identifying fallen leaves or fallen fruit that you find in the field, or as part of a collection you have made, or by photographs you have taken.','Do this soon, before the leaves are gone. Photos count, so take some while you\'re doing yardwork or firewood.'],
+  ['5b','Two ways to get a forecast','Identify two ways to obtain a weather forecast for an upcoming activity. Explain why weather forecasts are important when planning for an event.'],
+  ['5c','Signs of hazardous weather','Describe at least three natural indicators of impending hazardous weather, the potential dangerous events that might result from such weather conditions, and the appropriate actions to take.'],
+  ['5d','Extreme local weather plan','Describe extreme weather conditions you might encounter in the outdoors in your local geographic area. Discuss how you would determine ahead of time the potential risk of these types of weather dangers, alternative planning considerations to avoid such risks, and how you would prepare for and respond to those weather conditions.']
+ ]},
+ {cat:'Aquatics', items:[
+  ['6a','Swimmer test','Successfully complete the Scouting America swimmer test.','You earned the Swimming merit badge (Jul 2025), which includes the swimmer test. Ask a leader if they can sign this off.'],
+  ['6b','Safe trip afloat','Tell what precautions must be taken for a safe trip afloat.'],
+  ['6c','Parts of a boat & paddle','Identify the basic parts of a canoe, kayak, or other boat. Identify the parts of a paddle or an oar.'],
+  ['6d','Body position in a boat','Describe proper body positioning in a watercraft, depending on the type and size of the vessel. Explain the importance of proper body position in the boat.'],
+  ['6e','Line rescue','With a helper and a practice victim, show a line rescue both as tender and as rescuer. (The practice victim should be approximately 30 feet from shore in deep water.)','Needs deep water, so it\'s probably a summer camp item. Some of this may have been covered in Swimming MB.']
+ ]},
+ {cat:'First Aid & Emergencies', items:[
+  ['7a','Bandages: ankle, head, arm, collarbone','Demonstrate bandages for a sprained ankle and for injuries on the head, the upper arm, and the collarbone.','You earned First Aid MB (Apr 2026), so you\'ve practiced this. You still have to show it for the rank.'],
+  ['7b','Two person carries','By yourself and with a partner, show how to transport a person from a smoke‑filled room, and transport for at least 25 yards a person with a sprained ankle.'],
+  ['7c','Heart attack signs + CPR steps','Tell the five most common signals of a heart attack. Explain the steps (procedures) in cardiopulmonary resuscitation (CPR).'],
+  ['7d','Home utilities + hazards','Tell what utility services exist in your home or meeting place. Describe potential hazards associated with these utilities and tell how to respond in emergency situations.','Do this one at home: walk around with a parent and find the gas, water and electric shutoffs.'],
+  ['7e','Home emergency plan','Develop an emergency action plan for your home that includes what to do in case of fire, storm, power outage, and water outage.','Easiest one left. Sit down with a parent for 20 minutes, write it up (fire, storm, power outage, water outage) and show it to a leader.'],
+  ['7f','Getting safe drinking water','Explain how to obtain potable water in an emergency.']
+ ]},
+ {cat:'Fitness', items:[
+  ['8a','30 min · 5 days/wk · 4 weeks','After completing Second Class requirement 7a, be physically active at least 30 minutes each day for five days a week for four weeks. Keep track of your activities.','FITNESS_LINK'],
+  ['8b','Share results + set a goal','Share your challenges and successes in completing First Class requirement 8a. Set a goal for continuing to include physical activity as part of your daily life.']
+ ]},
+ {cat:'Citizenship', items:[
+  ['9a','Talk rights & duties with an official','Visit and discuss with a selected individual approved by your leader (for example, an elected official, judge, attorney, civil servant, principal, or teacher) the constitutional rights and obligations of a U.S. citizen.','Get the person approved by a leader first. A teacher or principal at school counts.'],
+  ['9b','Investigate a local environmental issue','Investigate an environmental issue affecting your community. Share what you learned about that issue with your patrol or troop. Tell what, if anything, could be done by you or your community to address the concern.'],
+  ['9c','Cut your outing trash','On a Scouting or family outing, take note of the trash and garbage you produce. Before your next similar outing, decide how you can reduce, recycle, or repurpose what you take on that outing, and then put those plans into action. Compare your results.','This takes two outings, so start noticing trash on the next one.'],
+  ['9d','3 hours of new service','Participate in three hours of service through one or more service projects approved by your Scoutmaster. The project(s) must not be the same service project(s) used for Tenderfoot requirement 7b and Second Class requirement 8e. Explain how your service to others relates to the Scout Law.','Has to be a new project, approved by the Scoutmaster before you start.']
+ ]},
+ {cat:'Leadership', items:[
+  ['10','Invite someone to Scouts','Tell someone who is eligible to join Scouts BSA, or an inactive Scout, about your Scouting activities. Invite this person to an outing, activity, service project, or meeting. Provide information on how to join, or encourage the inactive Scout to become active. Share your efforts with your Scoutmaster or other adult leader.']
+ ]},
+ {cat:'Scout Spirit & Finish', items:[
+  ['11','Scout spirit (4 new Law points)','Demonstrate Scout spirit by living the Scout Oath and Scout Law. Tell how you have done your duty to God and how you have lived four different points of the Scout Law (different from those points used for previous ranks) in your everyday life.','Pick four points you did NOT use for Tenderfoot or Second Class. Jot real examples in the notes as they happen.'],
+  ['12','Scoutmaster conference','While working toward the First Class rank, and after completing Second Class requirement 11, participate in a Scoutmaster conference.','Ask for this once everything else is signed off.'],
+  ['13','Board of review','Successfully complete your board of review for the First Class rank.','Last step, right after the Scoutmaster conference.']
+ ]}
+];
+const ALL = REQS.flatMap(c=>c.items.map(i=>({code:i[0],cat:c.cat})));
+/* Signed off per Scoutbook Individual Advancement Record, Oct 20 2026 */
+const SIGNED={'1a':'2026-10-12','1b':'2025-07-26','2a':'2026-04-20','2b':'2026-04-20','2c':'2026-10-12','2d':'2026-03-09','2e':'2026-10-12',
+ '3a':'2026-09-21','3b':'2025-07-26','4a':'2026-01-05','4b':'2026-04-20','5a':'2025-07-26','5b':'2025-07-26','5c':'2025-07-26','5d':'2025-07-26',
+ '6a':'2025-07-26','6b':'2025-07-26','6c':'2025-07-26','6d':'2025-07-26','6e':'2025-07-26','7a':'2025-07-26','7b':'2025-07-26','7c':'2025-07-26',
+ '7d':'2026-04-20','7f':'2025-07-26','8a':'2026-09-21','8b':'2026-09-21','9a':'2026-09-21','10':'2026-10-12'};
+
+/* ---------- state ---------- */
+const KEY='michaelHQ.v1';
+const DEFAULT={name:'Michael',req:{},hw:[],checkins:{},workouts:[],
+  settings:{goal:4,schoolOut:'14:45',paperTime:'14:55',evening:'19:30',fitTime:'16:30',fitDays:[1,3,5,6]},
+  challenge:{start:null}};
+let S;
+try{S=Object.assign(structuredClone(DEFAULT),JSON.parse(localStorage.getItem(KEY)||'{}'));S.settings=Object.assign(structuredClone(DEFAULT.settings),S.settings||{});S.challenge=S.challenge||{start:null}}catch(e){S=structuredClone(DEFAULT)}
+Object.entries(SIGNED).forEach(([c,d])=>{const r=S.req[c]||(S.req[c]={s:0,note:'',date:''});if(r.s<2){r.s=2;r.date=d;r.note=r.note||'Signed in Scoutbook'}});
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+let tab=(location.hash||'#home').slice(1); if(!['home','rank','hw','fit'].includes(tab)) tab='home';
+let openReq=null, rankFilter='all', hwDraft={subjs:['Math'],where:'Paper'}, fitDraft={type:'Treadmill',min:20};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const pad=n=>String(n).padStart(2,'0');
+const key=d=>`${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const parse=k=>{const[y,m,d]=k.split('-').map(Number);return new Date(y,m-1,d)};
+const addDays=(d,n)=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());x.setDate(x.getDate()+n);return x};
+const today=()=>{const n=new Date();return new Date(n.getFullYear(),n.getMonth(),n.getDate())};
+const mondayOf=d=>addDays(d,-((d.getDay()+6)%7));
+const DOW=['S','M','T','W','T','F','S'];
+const fmt=(k,o={weekday:'short',month:'short',day:'numeric'})=>parse(k).toLocaleDateString('en-US',o);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const minsOn=k=>S.workouts.filter(w=>w.date===k).reduce((a,w)=>a+(+w.min||0),0);
+const st=c=>(S.req[c]&&S.req[c].s)||0;
+/* weekly reward: 4+ active days (20+ min) Mon to Sun = $5 */
+const REWARD={days:4,amt:5};
+const FC_REWARD=25;
+function fcMoney(){
+  const left=ALL.filter(r=>st(r.code)<2).length, won=st('13')===2;
+  return `<div class="money ${won?'won':''}" style="margin-top:12px"><span class="num">$${FC_REWARD}</span><span class="grow">${won?(S.fcPaid?'First Class reward paid ✓':'Earned for making First Class!'):`When you pass your First Class board of review. ${left} requirement${left>1?'s':''} to go.`}</span>${won?`<button class="pill ${S.fcPaid?'ok':'warn'}" data-a="fcPaid">${S.fcPaid?'✓ Paid':'Mark paid'}</button>`:''}</div>`;
+}
+const weekActive=mon=>[...Array(7)].filter((_,i)=>minsOn(key(addDays(mon,i)))>=20).length;
+function rewardWeeks(){
+  if(!S.workouts.length) return [];
+  const first=mondayOf(parse(S.workouts.map(w=>w.date).sort()[0])), cur=mondayOf(today()), out=[];
+  for(let m=first;m<=cur;m=addDays(m,7)){const n=weekActive(m),k=key(m);out.push({k,n,earned:n>=REWARD.days,paid:(S.paid||[]).includes(k),current:+m===+cur})}
+  return out.reverse();
+}
+const ICON={check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>'};
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(()=>t.classList.remove('show'),2200)}
+function daysUntil(k){return Math.round((parse(k)-today())/864e5)}
+function dueLabel(k){const d=daysUntil(k);if(d<0)return['Overdue','late'];if(d===0)return['Due today','warn'];if(d===1)return['Due tomorrow','warn'];return['Due '+fmt(k),''];}
+
+/* ---------- 8a challenge ---------- */
+function challenge(){
+  if(!S.challenge.start) return null;
+  const start=parse(S.challenge.start), t=today(); const weeks=[];
+  for(let w=0;w<4;w++){
+    const days=[];let hit=0;
+    for(let d=0;d<7;d++){const dt=addDays(start,w*7+d),k=key(dt),m=minsOn(k),on=m>=30;if(on)hit++;days.push({k,on,future:dt>t})}
+    const end=addDays(start,w*7+6), over=end<t;
+    weeks.push({days,hit,over,pass:hit>=5,failed:over&&hit<5});
+  }
+  const done=weeks.every(w=>w.pass); const failed=weeks.some(w=>w.failed);
+  const cur=Math.min(3,Math.floor((t-start)/864e5/7));
+  return {weeks,done,failed,cur};
+}
+
+/* ---------- render ---------- */
+function render(){
+  const t=today();
+  $('#dateline').textContent=t.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
+  $('#title').textContent={home:greet(),rank:'First Class',hw:'Homework',fit:'Move'}[tab];
+  $('#back').style.display=tab==='home'?'none':'';
+  $('#view').innerHTML={home:vHome,rank:vRank,hw:vHW,fit:vFit}[tab]();
+}
+function greet(){const h=new Date().getHours();return (h<12?'Morning, ':h<17?'Hey, ':'Evening, ')+esc(S.name||'Michael')}
+
+
+/* HOME: one button per section */
+function hwNow(){S.hwWeek=S.hwWeek||{};return S.hwWeek[key(mondayOf(today()))]||{}}
+function vHome(){
+  const t=today(), mon=mondayOf(t), active=weekActive(mon), rLeft=Math.max(0,REWARD.days-active);
+  const hw=hwNow(), done=ALL.filter(r=>st(r.code)===2).length;
+  const hwLine=hw.has===undefined?'Anything due this week?':hw.has===false?'Nothing due this week ✓':hw.done?'Done ✓':'Not done yet';
+  const tile=(go,tag,cls,title,line,extra='')=>`<button class="card hub" data-go="${go}"><span class="tag ${cls}">${tag}</span><span class="hubtitle">${title}</span><span class="hubline">${line}</span>${extra}<span class="arrow">→</span></button>`;
+  return tile('hw','School','ink','Homework',hwLine)
+    +tile('rank','Scouts','hot','First Class',`${done} of ${ALL.length} signed off · $${FC_REWARD} when you make it`,`<span class="bar" style="margin-top:10px"><i style="width:${done/ALL.length*100}%"></i></span>`)
+    +tile('fit','Exercise','cob','Move',`${active} of ${REWARD.days} days this week · ${rLeft?`${rLeft} more for $${REWARD.amt}`:`$${REWARD.amt} earned ✓`}`);
+}
+
+/* HOMEWORK: yes/no + done */
+function vHW(){
+  const hw=hwNow();
+  return `<div class="card"><div class="big">Anything due this week?</div>
+    <div class="row" style="margin-top:14px"><button class="btn grow ${hw.has===true?'primary':'ghost'}" data-a="hwHas" data-v="1">Yes</button><button class="btn grow ${hw.has===false?'primary':'ghost'}" data-a="hwHas" data-v="0">No</button></div>
+    ${hw.has?`<button class="toggle" style="width:100%;margin-top:14px" data-a="hwDoneWk"><span>Done</span><span class="check ${hw.done?'on':''}">${hw.done?ICON.check:''}</span></button>`:''}
+    ${hw.has===false?'<div class="sub" style="margin-top:12px">Nice. Check again if something comes up.</div>':''}
+    <div class="note">If it's on paper, bring it home.</div></div>`;
+}
+
+/* RANK */
+function vRank(){
+  const c=[0,0,0]; ALL.forEach(r=>c[st(r.code)]++);
+  const R=42,C=2*Math.PI*R, pDone=c[2]/ALL.length, pProg=c[1]/ALL.length;
+  let h=`<div class="card"><div class="ringwrap"><div class="ring"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="${R}" fill="none" stroke="#EEECE7" stroke-width="12"/>
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="#F3C55A" stroke-width="12" stroke-dasharray="${(pDone+pProg)*C} ${C}" stroke-linecap="round"/>
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="var(--ok)" stroke-width="12" stroke-dasharray="${pDone*C} ${C}" stroke-linecap="round"/></svg>
+    <div class="lbl"><div><b>${Math.round(pDone*100)}%</b><small>signed off</small></div></div></div>
+    <div><div class="big">${ALL.length-c[2]} to go</div><div class="sub">Loaded from Scoutbook on Oct 20. Tap a circle to update. Use green only once a leader signs it in your book.</div>
+    <div class="legend"><span><i class="sq" style="background:#D3D1CB"></i>${c[0]} not started</span><span><i class="sq" style="background:var(--amber)"></i>${c[1]} working</span><span><i class="sq" style="background:var(--ok)"></i>${c[2]} signed</span></div></div></div>
+    <div class="filters">${[['all','All'],['todo','To do'],['done','Signed off']].map(([v,l])=>`<button class="chip ${rankFilter===v?'on':''}" data-a="rFilter" data-v="${v}">${l}</button>`).join('')}</div>${fcMoney()}</div>`;
+  const ch=challenge();
+  REQS.forEach(cat=>{
+    const items=cat.items.filter(i=>rankFilter==='all'||(rankFilter==='done'?st(i[0])===2:st(i[0])<2)); if(!items.length) return;
+    const dn=cat.items.filter(i=>st(i[0])===2).length;
+    h+=`<div class="cat"><div class="cathead"><b>${cat.cat}</b><span>${dn}/${cat.items.length}</span></div>`;
+    items.forEach(([code,name,text,hint])=>{
+      const s=st(code), o=openReq===code, r=S.req[code]||{};
+      let hintHTML='';
+      if(hint==='FITNESS_LINK'){
+        hintHTML=s===2?'':`<div class="hint cob">${!ch?'Not started yet. Start the 4‑week challenge on the Move tab. Treadmill, yardwork and firewood all count, 30+ minutes a day, 5 days a week.':
+          ch.done?'Challenge complete! Show your log to a leader for sign‑off.':
+          ch.failed?'A week came up short. Restart the challenge on the Move tab.':
+          `In progress: week ${ch.cur+1} of 4 (${ch.weeks[ch.cur].hit}/5 days this week).`}</div>`;
+      } else if(hint) hintHTML=`<div class="hint">${esc(hint)}</div>`;
+      h+=`<div class="req s${s}"><div class="reqtop"><button class="status s${s}" data-a="cycle" data-c="${code}" aria-label="Change status">${s===2?ICON.check:''}</button>
+        <button class="row grow" style="text-align:left" data-a="toggleReq" data-c="${code}"><span class="code">${code}</span><span class="reqname">${esc(name)}</span>${hint&&s<2?'<span class="hintdot"></span>':''}</button></div>
+        ${o?`<div class="reqbody">${esc(text)}${hintHTML}
+          <div class="seg">${['Not started','Working on it','Signed off'].map((l,i)=>`<button class="${s===i?'on':''}" data-a="setReq" data-c="${code}" data-v="${i}">${l}</button>`).join('')}</div>
+          ${s===2?`<label class="f">Date signed</label><input class="in" type="date" value="${esc(r.date||'')}" data-in="reqDate" data-c="${code}">`:''}
+          <label class="f">Notes</label><textarea class="in" placeholder="What you did, who signed, what's left…" data-in="reqNote" data-c="${code}">${esc(r.note||'')}</textarea></div>`:''}</div>`;
+    });
+    h+='</div>';
+  });
+  return h;
+}
+
+
+/* FITNESS */
+function vFit(){
+  const t=today(),k=key(t),mon=mondayOf(t),goal=S.settings.goal;
+  const days=[...Array(7)].map((_,i)=>{const d=addDays(mon,i),kk=key(d);return{kk,m:minsOn(kk),l:'MTWTFSS'[i]}});
+  const max=Math.max(60,...days.map(d=>d.m)); const active=days.filter(d=>d.m>=20).length;
+  const total=days.reduce((a,d)=>a+d.m,0);
+  const types=['Treadmill','Yardwork','Firewood','Run / walk','Bike','Sports','Other'];
+  const ch=challenge();
+  let chHTML;
+  if(st('8a')===2){
+    chHTML=`<div class="cardhead"><span class="tag ok">First Class 8a</span></div><div class="big">Already signed off</div><div class="sub">The 4‑week fitness requirement was signed ${fmt(S.req['8a'].date||'2026-09-21',{month:'short',day:'numeric',year:'numeric'})}. Now the goal is just keeping the habit going.</div>`;
+  } else if(!ch){
+    chHTML=`<div class="big">First Class 8a</div><div class="sub">30+ minutes a day, 5 days a week, for 4 weeks in a row. That's more than your usual goal, so start it when you're ready to push.</div>
+      <button class="btn hot full" style="margin-top:14px" data-a="chStart">Start the 4‑week challenge today</button>`;
+  } else {
+    chHTML=`<div class="big">${ch.done?'Challenge complete':ch.failed?'Week came up short':`Week ${ch.cur+1} of 4`}</div>
+      <div class="sub">${ch.done?'Show this to a leader to get 8a signed off.':ch.failed?'Every week needs 5 days of 30+ min. Restart when you\'re ready.':`Started ${fmt(S.challenge.start)}. Each week needs 5 days with 30+ min.`}</div>
+      <div class="grid4">${ch.weeks.map((w,i)=>`<span class="w">W${i+1}</span>${w.days.map(d=>`<span class="c ${d.on?'on':''} ${d.future&&!d.on?'future':''}"></span>`).join('')}<span class="res" style="color:${w.pass?'var(--ok)':w.failed?'var(--hot)':'var(--muted)'}">${w.hit}/5</span>`).join('')}</div>
+      <div class="row" style="margin-top:14px">${ch.done?`<button class="btn hot small" data-a="chSign">Mark 8a working → ask leader</button>`:''}<button class="btn ghost small" data-a="chReset">${ch.failed?'Restart today':'Reset'}</button></div>`;
+  }
+  const recent=[...S.workouts].sort((a,b)=>b.date.localeCompare(a.date)||b.ts-a.ts).slice(0,12);
+  const rw=rewardWeeks(), earned=rw.filter(w=>w.earned), owed=earned.filter(w=>!w.paid&&!w.current);
+  const rLeft=Math.max(0,REWARD.days-active), thisWk=rw.find(w=>w.current);
+  const earnHTML=`<div class="card"><div class="cardhead"><span class="tag" style="background:var(--amberSoft);color:#8A5B00">Earnings</span><span style="font-size:13px;color:var(--muted);font-weight:600">${REWARD.days}+ days = $${REWARD.amt}</span></div>
+    <div class="money ${rLeft?'':'won'}"><span class="num">$${REWARD.amt}</span><span>${rLeft?`This week: ${active}/${REWARD.days} days. ${rLeft} more to earn it.`:'Earned this week ✓'}</span></div>
+    <div class="earn" style="margin-top:10px"><div><div class="num">$${earned.length*REWARD.amt}</div><div class="sub" style="margin:4px 0 0">earned total</div></div><div><div class="num" style="color:${owed.length?'var(--hot)':'inherit'}">$${owed.length*REWARD.amt}</div><div class="sub" style="margin:4px 0 0">not paid yet</div></div></div>
+    ${earned.length?earned.map(w=>`<div class="item"><div class="grow"><div class="itemtitle">Week of ${fmt(w.k,{month:'short',day:'numeric'})}</div><div class="itemmeta">${w.n} active days${w.current?' · week still going':''}</div></div>${w.current?'':`<button class="pill ${w.paid?'ok':'warn'}" data-a="paid" data-v="${w.k}">${w.paid?'✓ Paid':'Mark paid'}</button>`}</div>`).join(''):'<div class="note">Weeks run Monday to Sunday. Each week you hit 4 shows up here.</div>'}
+  </div>`;
+  return `<div class="card"><div class="cardhead"><span class="tag cob">This week</span><div class="stepper"><span style="font-size:13px;color:var(--muted);font-weight:600">Goal</span><button data-a="goal" data-v="-1">−</button><span class="num" style="font-size:18px">${goal}</span><button data-a="goal" data-v="1">+</button></div></div>
+    <div class="row" style="gap:22px;margin-bottom:6px"><div><div class="num" style="font-size:34px">${active}<span style="color:var(--faint);font-size:22px">/${goal}</span></div><div class="sub" style="margin:0">active days</div></div><div><div class="num" style="font-size:34px">${total}</div><div class="sub" style="margin:0">minutes</div></div></div>
+    <div class="bars">${days.map(d=>`<div class="col"><span class="v">${d.m||''}</span><div class="b ${d.m>=20?'hit':''}" style="height:${Math.max(3,d.m/max*100)}px"></div><span class="d" style="${d.kk===k?'color:var(--ink)':''}">${d.l}</span></div>`).join('')}</div>
+    <div class="note">A day counts when you hit 20 minutes total. Two 10‑minute chunks count too.</div></div>
+  <div class="card" id="logcard"><div class="cardhead"><span class="tag cob">Log activity</span></div>
+    <div class="chips">${types.map(x=>`<button class="chip ${fitDraft.type===x?'cobon':''}" data-a="fType" data-v="${x}">${x}</button>`).join('')}</div>
+    <label class="f">Minutes</label><div class="chips">${[10,15,20,30,45,60].map(m=>`<button class="chip ${+fitDraft.min===m?'cobon':''}" data-a="fMin" data-v="${m}">${m}</button>`).join('')}<input class="in" id="fMinIn" type="number" min="1" inputmode="numeric" placeholder="Other" style="width:90px;height:36px" value="${[10,15,20,30,45,60].includes(+fitDraft.min)?'':esc(fitDraft.min)}"></div>
+    <label class="f">Day</label><input class="in" type="date" id="fDate" value="${esc(fitDraft.date||k)}" max="${k}">
+    <label class="f">Note (optional)</label><input class="in" id="fNote" placeholder="e.g. 2.1 mi, stacked a cord" value="${esc(fitDraft.note||'')}">
+    <button class="btn cob full" style="margin-top:14px" data-a="fAdd">Log it</button></div>
+  ${earnHTML}
+  <div class="card" style="border-color:#FFD2C2">${chHTML}</div>
+  <h2>Recent</h2><div class="card">${recent.length?recent.map(w=>`<div class="item"><div class="grow"><div class="itemtitle">${esc(w.type)} · ${w.min} min</div><div class="itemmeta">${fmt(w.date)}${w.note?' · '+esc(w.note):''}</div></div><button class="x" data-a="fDel" data-id="${w.id}">×</button></div>`).join(''):'<div class="empty">Nothing logged yet.</div>'}</div>`;
+}
+
+/* SETTINGS sheet */
+function openSettings(){
+  const s=S.settings;
+  $('#sheet').innerHTML=`<h3>Settings</h3><div class="sub">Everything saves in this browser. Use backup to move it to another device.</div>
+  <label class="f">Name</label><input class="in" data-in="name" value="${esc(S.name)}">
+  <h2>Phone reminders</h2>
+  <div class="sub">This makes a calendar file with repeating reminders and alerts. Open it on the phone (or import it into Google Calendar) and the reminders keep going even when the app is closed.</div>
+  <label class="f">School's out (weekdays)</label><input class="in" type="time" data-in="schoolOut" value="${s.schoolOut}">
+  <div class="note" style="margin-top:4px">“Got math homework? Paper stuff in your backpack?”</div>
+  <label class="f">Grab‑your‑paper reminder (weekdays)</label><input class="in" type="time" data-in="paperTime" value="${s.paperTime||'14:55'}">
+  <div class="note" style="margin-top:4px">“Paper homework? Grab it before you leave!”</div>
+  <label class="f">Evening check (Sun to Thu)</label><input class="in" type="time" data-in="evening" value="${s.evening}">
+  <div class="note" style="margin-top:4px">“Is your math done? Back in your backpack?”</div>
+  <label class="f">Exercise reminder</label><input class="in" type="time" data-in="fitTime" value="${s.fitTime}">
+  <div class="chips" style="margin-top:8px">${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map((d,i)=>`<button class="chip ${s.fitDays.includes(i)?'cobon':''}" data-a="fitDay" data-v="${i}">${d}</button>`).join('')}</div>
+  <button class="btn primary full" style="margin-top:16px" data-a="ics">Download reminders</button>
+  <h2>Backup</h2>
+  <div class="row"><button class="btn ghost grow" data-a="export">Export</button><label class="btn ghost grow" style="cursor:pointer">Import<input type="file" accept="application/json" id="importFile" hidden></label></div>
+  <button class="btn ghost full" style="margin-top:10px;color:var(--hot)" data-a="reset">Reset everything</button>
+  <button class="btn primary full" style="margin-top:18px" data-a="closeSheet">Done</button>`;
+  $('#sheet').classList.add('open');$('#scrim').classList.add('open');
+  $('#importFile').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const d=JSON.parse(t);S=Object.assign(structuredClone(DEFAULT),d);save();closeSheet();render();toast('Backup restored')}catch(_){toast('That file didn\'t work')}})};
+}
+function closeSheet(){$('#sheet').classList.remove('open');$('#scrim').classList.remove('open');render()}
+
+function download(name,data,type){const b=new Blob([data],{type});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}
+function buildICS(){
+  const s=S.settings, now=new Date(), stamp=now.toISOString().replace(/[-:]/g,'').split('.')[0]+'Z';
+  const BY=['SU','MO','TU','WE','TH','FR','SA'];
+  const firstOn=(days,time)=>{for(let i=0;i<7;i++){const d=addDays(today(),i);if(days.includes(d.getDay()))return key(d).replace(/-/g,'')+'T'+time.replace(':','')+'00'}};
+  const ev=(id,title,desc,days,time)=>days.length?['BEGIN:VEVENT',`UID:${id}-${uid()}@michaelhq`,`DTSTAMP:${stamp}`,`DTSTART:${firstOn(days,time)}`,'DURATION:PT5M',`RRULE:FREQ=WEEKLY;BYDAY=${days.map(d=>BY[d]).join(',')}`,`SUMMARY:${title}`,`DESCRIPTION:${desc}`,'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${title}`,'TRIGGER:PT0M','END:VALARM','END:VEVENT'].join('\r\n'):'';
+  return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Michael HQ//EN','CALSCALE:GREGORIAN',
+    ev('hw-school','Got math homework? 📚','Any math homework today? Anything else due? If it\'s on paper\\, is it in your backpack? Log it in Michael HQ.',[1,2,3,4,5],s.schoolOut),
+    ev('hw-paper','Grab your paper homework 📄','If you have paper homework\\, grab it now so it comes home. Canvas work is online.',[1,2,3,4,5],s.paperTime||'14:55'),
+    ev('hw-evening','Math done? ✅','Is your math (and anything else) done? Is it back in your backpack for tomorrow?',[0,1,2,3,4],s.evening),
+    ev('move','20 minutes today 🏃','Treadmill\\, yardwork or firewood. 20+ minutes counts. Log it in Michael HQ.',s.fitDays,s.fitTime),
+    'END:VCALENDAR'].filter(Boolean).join('\r\n');
+}
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const tb=e.target.closest('[data-go]'); if(tb){tab=tb.dataset.go;location.hash=tab;openReq=null;render();scrollTo(0,0);return}
+  const el=e.target.closest('[data-a]'); if(!el) return;
+  const a=el.dataset.a, c=el.dataset.c, v=el.dataset.v, id=el.dataset.id, k=key(today());
+  const req=c=>S.req[c]||(S.req[c]={s:0,note:'',date:''});
+  switch(a){
+    case 'openSettings': openSettings(); return;
+    case 'closeSheet': closeSheet(); return;
+    case 'ciNone': S.checkins[k]='none'; toast('Checked in. No homework.'); break;
+    case 'ciSome': S.checkins[k]='some'; tab='hw'; location.hash=tab; save(); render(); setTimeout(()=>$('#hwTask')&&$('#hwTask').focus(),50); return;
+    case 'goHW': tab='hw'; location.hash=tab; break;
+    case 'goReq': tab='rank'; openReq=c; location.hash=tab; save(); render(); setTimeout(()=>{const n=document.querySelector(`[data-a="toggleReq"][data-c="${c}"]`);n&&n.scrollIntoView({block:'center'})},30); return;
+    case 'quickFit': tab='fit'; location.hash=tab; save(); render(); setTimeout(()=>$('#logcard').scrollIntoView({block:'start'}),30); return;
+    case 'hwSubj': {hwStash(); const s=hwDraft.subjs; hwDraft.subjs=s.includes(v)?(s.length>1?s.filter(x=>x!==v):s):subjOrder([...s,v]); break;}
+    case 'hwWhere': hwStash(); hwDraft.where=v; break;
+    case 'hwAdd': {
+      const task=$('#hwTask').value.trim(), due=$('#hwDue').value||k, subj=hwDraft.subjs.join(' + '), paper=hwDraft.where==='Paper';
+      S.hw.push({id:uid(),subj,task,due,where:hwDraft.where,paper,packed:false,done:false,created:k});
+      S.checkins[k]='some'; hwDraft={subjs:hwDraft.subjs,where:hwDraft.where}; toast(subj+' added'); break;}
+    case 'hwDone': {const x=S.hw.find(x=>x.id===id); x.done=!x.done; x.doneAt=x.done?k:null; if(x.done&&x.paper&&!x.packed) toast('Done! Now put it in your backpack.'); else if(x.done) toast('Done ✓'); break;}
+    case 'hwPack': {const x=S.hw.find(x=>x.id===id); x.packed=!x.packed; break;}
+    case 'hwDel': S.hw=S.hw.filter(x=>x.id!==id); break;
+    case 'cycle': {const r=req(c); r.s=(r.s+1)%3; if(r.s===2&&!r.date) r.date=k; break;}
+    case 'setReq': {const r=req(c); r.s=+v; if(r.s===2&&!r.date) r.date=k; break;}
+    case 'toggleReq': openReq=openReq===c?null:c; break;
+    case 'rFilter': rankFilter=v; break;
+    case 'goal': S.settings.goal=Math.min(7,Math.max(1,S.settings.goal+ +v)); break;
+    case 'fType': stashFit(); fitDraft.type=v; break;
+    case 'fMin': stashFit(); fitDraft.min=+v; break;
+    case 'fAdd': {stashFit(); const min=+fitDraft.min; if(!min){toast('Add minutes first');return}
+      S.workouts.push({id:uid(),date:fitDraft.date||k,type:fitDraft.type,min,note:fitDraft.note||'',ts:Date.now()});
+      const tot=minsOn(fitDraft.date||k); fitDraft={type:fitDraft.type,min:20};
+      toast(tot>=20?`${tot} min today. Day counts ✓`:`${tot} min today. ${20-tot} more to count the day.`); break;}
+    case 'fDel': S.workouts=S.workouts.filter(w=>w.id!==id); break;
+    case 'hwHas': {S.hwWeek=S.hwWeek||{}; const wk=key(mondayOf(today())), cur=S.hwWeek[wk]||{}; S.hwWeek[wk]={has:v==='1',done:v==='1'?!!cur.done:false}; break;}
+    case 'hwDoneWk': {const wk=key(mondayOf(today())); S.hwWeek[wk].done=!S.hwWeek[wk].done; if(S.hwWeek[wk].done) toast('Nice. Homework done ✓'); break;}
+    case 'fcPaid': S.fcPaid=!S.fcPaid; break;
+    case 'paid': {S.paid=S.paid||[]; S.paid=S.paid.includes(v)?S.paid.filter(x=>x!==v):[...S.paid,v]; break;}
+    case 'chStart': S.challenge.start=k; toast('Challenge started. Week 1 of 4.'); break;
+    case 'chReset': if(!confirm('Restart the 4-week challenge from today?'))return; S.challenge.start=k; break;
+    case 'chSign': {const r=req('8a'); r.s=Math.max(r.s,1); r.note=(r.note?r.note+'\n':'')+`4-week challenge finished ${fmt(k)}. Show log to a leader.`; toast('8a marked. Go get it signed!'); break;}
+    case 'fitDay': {const d=+v,f=S.settings.fitDays; S.settings.fitDays=f.includes(d)?f.filter(x=>x!==d):[...f,d].sort(); save(); openSettings(); return;}
+    case 'ics': download('michael-reminders.ics',buildICS(),'text/calendar'); toast('Reminders downloaded'); return;
+    case 'export': download('michael-hq-backup.json',JSON.stringify(S,null,1),'application/json'); return;
+    case 'reset': if(!confirm('Erase all progress, homework and workouts?'))return; S=structuredClone(DEFAULT); save(); closeSheet(); return;
+  }
+  save(); render();
+});
+function hwStash(){hwDraft.task=$('#hwTask').value;hwDraft.due=$('#hwDue').value}
+const subjOrder=a=>['Math','Other'].filter(s=>a.includes(s));
+function stashFit(){const m=$('#fMinIn');if(m&&m.value)fitDraft.min=+m.value;fitDraft.date=$('#fDate').value;fitDraft.note=$('#fNote').value}
+document.addEventListener('input',e=>{
+  const el=e.target, f=el.dataset.in;
+  if(el.id==='fMinIn'){fitDraft.min=+el.value||fitDraft.min;return}
+  if(!f) return;
+  if(f==='reqNote'||f==='reqDate'){const r=S.req[el.dataset.c]||(S.req[el.dataset.c]={s:0,note:'',date:''}); r[f==='reqNote'?'note':'date']=el.value}
+  else if(f==='name'){S.name=el.value}
+  else S.settings[f]=el.value;
+  save();
+});
+window.addEventListener('hashchange',()=>{const t=location.hash.slice(1);if(t!==tab&&['home','rank','hw','fit'].includes(t)){tab=t;render()}});
+render();
+</script>
+</body>
+</html>
